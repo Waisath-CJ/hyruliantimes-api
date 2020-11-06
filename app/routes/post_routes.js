@@ -40,4 +40,15 @@ router.patch('/posts/:post_id', requiresToken, (req, res, next) => {
     .catch(next)
 })
 
+// DELETE
+// Delete a specific event
+router.delete('/posts/:post_id', requiresToken, (req, res, next) => {
+  Post.findById(req.params.post_id)
+    .then(handle404)
+    .then(post => requireOwnership(req, post))
+    .then(post => post.deleteOne())
+    .then(() => res.sendStatus(204))
+    .catch(next)
+})
+
 module.exports = router
