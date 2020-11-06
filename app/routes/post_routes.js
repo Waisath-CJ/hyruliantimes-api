@@ -4,8 +4,8 @@ const passport = require('passport')
 const Post = require('../models/post')
 
 const router = express.Router()
-const requiresToken = passport.authenticate('bearer', {session: false})
-const {BadCredentialsError, BadParamsError, handle404, requireOwnership} = require('../../lib/custom_errors')
+const requiresToken = passport.authenticate('bearer', { session: false })
+const { BadCredentialsError, BadParamsError, handle404, requireOwnership } = require('../../lib/custom_errors')
 
 // CREATE
 // Create a Post
@@ -23,6 +23,18 @@ router.post('/posts', requiresToken, (req, res, next) => {
 router.get('/posts', requiresToken, (req, res, next) => {
   Post.find()
     .populate('owner')
+    .then(posts => {
+      const postObj = {posts: []}
+      posts.forEach(post => {
+        postObj.posts.push({
+          _id: post._id,
+          content: post.content,
+          owner: post.owner.fullName,
+          createdAt: post.createdAt
+        })
+      })
+      return postObj
+    })
     .then(posts => res.json(posts))
     .catch(next)
 })
