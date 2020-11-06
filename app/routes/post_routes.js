@@ -19,11 +19,35 @@ router.post('/posts', requiresToken, (req, res, next) => {
 })
 
 // INDEX
-// Show all posts
+// Show all Posts
 router.get('/posts', requiresToken, (req, res, next) => {
   Post.find()
     .populate('owner')
     .then(posts => res.json(posts))
+    .catch(next)
+})
+
+// UPDATE
+// Update a Post
+router.patch('/posts/:post_id', requiresToken, (req, res, next) => {
+  delete req.body.post.owner
+
+  Post.findById(req.params.post_id)
+    .then(handle404)
+    .then(post => requireOwnership(req, post))
+    .then(post => post.updateOne(req.body.post))
+    .then(() => res.sendStatus(204))
+    .catch(next)
+})
+
+// DELETE
+// Delete a specific event
+router.delete('/posts/:post_id', requiresToken, (req, res, next) => {
+  Post.findById(req.params.post_id)
+    .then(handle404)
+    .then(post => requireOwnership(req, post))
+    .then(post => post.deleteOne())
+    .then(() => res.sendStatus(204))
     .catch(next)
 })
 
