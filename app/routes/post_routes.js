@@ -18,4 +18,13 @@ router.post('/posts', requiresToken, (req, res, next) => {
     .catch(next)
 })
 
+// INDEX
+// Show all posts
+router.get('/posts', requiresToken, (req, res, next) => {
+  Post.find()
+    .populate('owner')
+    .then(posts => res.json(posts))
+    .catch(next)
+})
+
 module.exports = router
