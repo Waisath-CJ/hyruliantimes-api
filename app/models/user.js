@@ -19,6 +19,13 @@ const userSchema = new mongoose.Schema({
       delete user.hashedPassword
       return user
     }
+  },
+  toJSON: {
+    // remove `hashedPassword` field when we call `.toObject`
+    transform: (_doc, user) => {
+      delete user.hashedPassword
+      return user
+    }
   }
 })
 
