@@ -29,7 +29,7 @@ router.get('/posts', requiresToken, (req, res, next) => {
         postObj.posts.push({
           _id: post._id,
           content: post.content,
-          owner: post.owner.fullName,
+          owner: post.owner,
           createdAt: post.createdAt
         })
       })
