@@ -30,7 +30,8 @@ router.get('/posts', requiresToken, (req, res, next) => {
           _id: post._id,
           content: post.content,
           owner: post.owner,
-          createdAt: post.createdAt
+          createdAt: post.createdAt,
+          updatedAt: post.updatedAt
         })
       })
       return postObj
